@@ -128,3 +128,9 @@ export const PLACE_ICONS: Record<string, string[]> = {
 export const PIN = [".XXX.", "XXXXX", "XXWXX", "XXXXX", ".XXX.", "..X.."];
 export const LOCK = ["..KKK..", ".K...K.", ".K...K.", "KKKKKKK", "KXXXXXK", "KXXWXXK", "KXXWXXK", "KKKKKKK"];
 export const STAR = ["..X..", ".XXX.", "XXXXX", ".XXX.", "..X.."];
+
+/** smooth vector heart in an 11x10 box (same box as the pixel HEART) */
+export const HEART_D = "M5.5 10C2 7.2 0 5.4 0 3.1 0 1.3 1.4 0 3 0c1.1 0 2 .6 2.5 1.6C6 .6 6.9 0 8 0c1.6 0 3 1.3 3 3.1 0 2.3-2 4.1-5.5 6.9Z";
+/** stair-step outline of the pixel HEART, for morphing into HEART_D */
+export const PIXEL_HEART_D =
+  "M2 0H4V1H5V2H6V1H7V0H9V1H10V2H11V5H10V6H9V7H8V8H7V9H6V10H5V9H4V8H3V7H2V6H1V5H0V2H1V1H2Z";

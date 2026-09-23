@@ -1,25 +1,31 @@
 {
   "task": "tanvi-appointment-desk",
-  "phase": "phase-3-done",
+  "phase": "phase-4-done",
   "files_touched": [
-    "src/lib/router.ts",
-    "src/scenes/{boot,hello,wizard(stub),history(stub)}.ts",
-    "src/components/runawayButton.ts",
-    "src/styles/scenes.css",
-    "src/main.ts"
+    "src/lib/{when,id}.ts",
+    "src/components/{calendar,clock}.ts",
+    "src/steps/{date,time,place,reason,payment(stub),review(stub)}.ts",
+    "src/scenes/wizard.ts",
+    "styles",
+    "tests/unit.spec.ts",
+    "playwright.config.ts"
   ],
   "commands": [
+    {
+      "cmd": "npx playwright test tests/unit.spec.ts",
+      "exit": 0
+    },
     {
       "cmd": "npm run build",
       "exit": 0
     },
     {
-      "cmd": "playwright screenshot boot/hello + runaway x3 + easter egg",
+      "cmd": "node .dbg.mjs 390x844 + 360x740 wizard walk",
       "exit": 0
     }
   ],
   "evidence": [
-    "boot->hello handoff renders, Tanvi alternates pink/blue, runaway reached 'nope' after 3 hovers, egg bubble + rain shown, 0 page errors"
+    "steps 1-4 walk ok at 390 and 360, payment-gated Next toasts 'Payment pending: one cute pic.', back -> step 4/6 50%, 0 page errors"
   ],
-  "next_action": "Phase 4: lib/when.ts, components/calendar.ts + clock.ts, steps/date,time,place,reason, scenes/wizard.ts (header, deck, history API, lovebar, garden)"
+  "next_action": "Phase 5: lib/image.ts, components/{polaroid,ticketView,holdButton}.ts, steps/payment.ts + review.ts full"
 }

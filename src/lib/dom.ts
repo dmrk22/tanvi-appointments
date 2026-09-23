@@ -27,10 +27,10 @@ export function s<K extends keyof SVGElementTagNameMap>(tag: K, attrs: Attrs = {
 export const qs = <T extends Element = HTMLElement>(sel: string, root: ParentNode = document) =>
   root.querySelector<T>(sel)!;
 
-export function on<K extends keyof HTMLElementEventMap>(
+export function on<K extends keyof WindowEventMap>(
   el: EventTarget,
   type: K,
-  fn: (e: HTMLElementEventMap[K]) => void,
+  fn: (e: WindowEventMap[K]) => void,
   opts?: AddEventListenerOptions,
 ) {
   el.addEventListener(type, fn as EventListener, opts);
