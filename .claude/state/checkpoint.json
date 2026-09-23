@@ -1,8 +1,8 @@
 {
   "task": "tanvi-appointment-desk",
-  "phase": "phase-1-done",
-  "files_touched": ["package.json", "package-lock.json", "tsconfig.json", "vite.config.ts", "index.html", "public/favicon.svg", "src/config.ts", "src/main.ts", "src/styles/tokens.css", "src/styles/base.css"],
-  "commands": [{"cmd": "npm create vite vt --template vanilla-ts (scratch)", "exit": 0}, {"cmd": "npm i gsap; npm i -D vite typescript@~6.0.2 @playwright/test", "exit": 0}, {"cmd": "npm run build", "exit": 0}],
-  "evidence": ["build green: js 0.41KB gz, css 0.95KB gz"],
-  "next_action": "Phase 2: motion core (gsap.ts, loop, particles, flowers, trail, burst, sfx, haptics, transitions, loveBar, pixelArt, toast, state)"
+  "phase": "phase-2-done",
+  "files_touched": ["src/lib/{dom,state,storage}.ts", "src/motion/{gsap,tokens,loop,particles,flowers,trail,burst,sfx,haptics,transitions}.ts", "src/components/{loveBar,pixelArt,toast}.ts", "src/styles/{pixel,components}.css", "src/main.ts (playground)"],
+  "commands": [{"cmd": "npm run build", "exit": 0}, {"cmd": "npx playwright install chromium", "exit": 0}, {"cmd": "node shot.mjs (playground screenshot 390x844)", "exit": 0}],
+  "evidence": ["playground screenshot: flowers bloom, lovebar fills, toast renders, no page errors", "js 51KB gz"],
+  "next_action": "Phase 3: scenes/boot.ts + scenes/hello.ts (+runawayButton, easter egg, sound toggle), scenes.css, router in main.ts"
 }

@@ -1,0 +1,105 @@
+.px {
+  display: block;
+  image-rendering: pixelated;
+  overflow: visible;
+}
+.pixel {
+  font-family: var(--pixel);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+/* ---- love bar ---- */
+.lovebar {
+  width: 100%;
+}
+.lovebar .row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.lovebar .track {
+  position: relative;
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 3px;
+  padding: 3px;
+  background: var(--milk);
+  border: 2px solid var(--ink);
+  box-shadow: var(--pixel-shadow);
+  transform-origin: 50% 50%;
+}
+.lovebar .seg {
+  height: 12px;
+  background: var(--cloud);
+  box-shadow: inset 0 0 0 1px var(--blush);
+}
+.lovebar .seg.on {
+  background: var(--bubblegum);
+  box-shadow: inset 0 2px 0 var(--blush);
+}
+.lovebar .rail {
+  position: absolute;
+  left: 3px;
+  right: 3px;
+  top: -14px;
+  pointer-events: none;
+}
+.lovebar .rider {
+  position: absolute;
+  left: 0;
+  top: 0;
+  translate: -50% 0;
+  filter: drop-shadow(1px 1px 0 var(--ink));
+}
+.lovebar .pct {
+  min-width: 3.4em;
+  text-align: right;
+  font-size: var(--fs-xs);
+  font-family: var(--pixel);
+  display: inline-block;
+}
+.lovebar .mood {
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--ink-soft);
+  font-family: var(--pixel);
+}
+.lovebar.big .seg {
+  height: 22px;
+}
+.lovebar.big .rail {
+  top: -22px;
+}
+.lovebar.big .pct {
+  font-size: var(--fs-l);
+  min-width: 2.6em;
+}
+.lovebar.big .mood {
+  text-align: center;
+  font-size: var(--fs-xs);
+}
+
+/* ---- stamps, pixel bubbles ---- */
+.stamp {
+  font-family: var(--pixel);
+  font-weight: 700;
+  color: var(--rose-deep);
+  border: 3px solid currentColor;
+  padding: 2px 8px;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 3px 3px 0 var(--ink);
+  letter-spacing: 0.08em;
+}
+.bubble {
+  position: relative;
+  font-family: var(--pixel);
+  font-size: var(--fs-xs);
+  line-height: 1.4;
+  background: var(--milk);
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  box-shadow: var(--pixel-shadow);
+  padding: 10px 14px;
+}
