@@ -19,3 +19,8 @@
 - **Deploy target**: GitHub Pages (go.md Phase 9 route 1). `gh` is logged in as `dmrk22` with `repo` scope;
   Vercel CLI 59.23.0 is also logged in as `damaruk` (route 2 fallback). No Railway/DB — the app is static, no backend.
 - `files/` and `files.zip` are the original delivery copies of `.claude/`; `diff` shows they're identical, so they're gitignored and not deleted.
+
+## 2026-09-23 — Phase 1
+
+- **TypeScript ~6.0.2, not 7.0.2**: the Vite 8 vanilla-ts template pins `~6.0.2`; kept the pairing the template is tested with. `tsc --noEmit` + `strict` as the spec requires.
+- Scaffolded in a scratch dir and copied only config up (root isn't empty); template boilerplate (counter.ts, assets, icons.svg) never entered the repo.

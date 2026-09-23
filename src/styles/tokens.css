@@ -1,0 +1,32 @@
+:root {
+  --milk: #ffffff;
+  --cloud: #fff6fa;
+  --blush: #ffd1e3;
+  --bubblegum: #ff5fa2;
+  --rose-deep: #e23e86;
+  --sky: #cfe6ff;
+  --cornflower: #5b9bff;
+  --ink: #3a2a4d;
+  --ink-soft: #7b6a8e;
+  --pixel-shadow: 4px 4px 0 var(--ink);
+
+  --soft: "Fredoka", ui-rounded, system-ui, sans-serif;
+  --pixel: "Silkscreen", ui-monospace, monospace;
+
+  --fs-xs: 14px;
+  --fs-s: 16px;
+  --fs-m: 20px;
+  --fs-l: 28px;
+  --fs-xl: 44px;
+  --fs-xxl: 64px;
+
+  --r-panel: 28px;
+  --r-pill: 999px;
+  --glow: 0 10px 30px -10px rgba(226, 62, 134, 0.45);
+  --lift: 0 18px 40px -16px rgba(58, 42, 77, 0.35);
+
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left, 0px);
+  --sar: env(safe-area-inset-right, 0px);
+}

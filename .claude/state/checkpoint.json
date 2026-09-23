@@ -1,13 +1,8 @@
 {
   "task": "tanvi-appointment-desk",
-  "phase": "setup-complete",
-  "files_touched": [".gitignore", "docs/DECISIONS.md", "docs/STATE.md", "docs/PROGRESS.md", ".claude/skills/frontend-design/SKILL.md", ".claude/skills/frontend-design/LICENSE.txt"],
-  "commands": [
-    {"cmd": "node/npm/git/docker/gh/vercel --version", "exit": 0},
-    {"cmd": "gh auth status", "exit": 0},
-    {"cmd": "vercel whoami", "exit": 0},
-    {"cmd": "npm view gsap|vite|typescript|@playwright/test|gh-pages version", "exit": 0}
-  ],
-  "evidence": ["gh logged in as dmrk22 (repo scope)", "vercel logged in as damaruk", "frontend-design @ anthropics/skills 34040c9"],
-  "next_action": "go.md Phase 1: scaffold Vite vanilla-ts into repo root via temp dir"
+  "phase": "phase-1-done",
+  "files_touched": ["package.json", "package-lock.json", "tsconfig.json", "vite.config.ts", "index.html", "public/favicon.svg", "src/config.ts", "src/main.ts", "src/styles/tokens.css", "src/styles/base.css"],
+  "commands": [{"cmd": "npm create vite vt --template vanilla-ts (scratch)", "exit": 0}, {"cmd": "npm i gsap; npm i -D vite typescript@~6.0.2 @playwright/test", "exit": 0}, {"cmd": "npm run build", "exit": 0}],
+  "evidence": ["build green: js 0.41KB gz, css 0.95KB gz"],
+  "next_action": "Phase 2: motion core (gsap.ts, loop, particles, flowers, trail, burst, sfx, haptics, transitions, loveBar, pixelArt, toast, state)"
 }
