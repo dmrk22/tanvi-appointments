@@ -1,38 +1,37 @@
 {
   "task": "tanvi-appointment-desk",
-  "phase": "phase-9-blocked-on-permission",
+  "phase": "shipped",
   "files_touched": [
-    "docs/STATE.md",
-    "tanvi-appointments-dist.zip"
+    "docs/STATE.md"
   ],
   "commands": [
     {
-      "cmd": "gh repo create tanvi-appointments --public ... --push",
-      "exit": "denied",
-      "note": "auto-mode classifier: Create Public Surface"
-    },
-    {
-      "cmd": "npm run build",
-      "exit": 0
-    },
-    {
-      "cmd": "gzip -c dist/assets/*.js|.css | wc -c",
+      "cmd": "gh repo create tanvi-appointments --public --push",
       "exit": 0,
-      "note": "JS 67884B gz, CSS 5719B gz"
+      "note": "user explicitly authorized after auto-mode denial"
     },
     {
-      "cmd": "zip -rq tanvi-appointments-dist.zip dist",
+      "cmd": "npx gh-pages -d dist",
       "exit": 0
     },
     {
-      "cmd": "npx vite preview --host --port 4321 (background)",
-      "exit": "running",
-      "note": "Local http://localhost:4321/, Network http://10.4.84.53:4321/"
+      "cmd": "gh api repos/dmrk22/tanvi-appointments/pages",
+      "exit": 0,
+      "note": "gh-pages branch, path /, public, https enforced"
+    },
+    {
+      "cmd": "curl live URL",
+      "exit": 0,
+      "note": "HTTP 200 on first attempt"
+    },
+    {
+      "cmd": "Playwright against the real live URL",
+      "exit": 0,
+      "note": "Hello + wizard date step both render correctly, 0 console errors"
     }
   ],
   "evidence": [
-    "build/test/budget all verified green before the blocked step",
-    "zip + LAN preview are the working fallback per go.md Phase 9 route 3"
+    "https://dmrk22.github.io/tanvi-appointments/ live and verified"
   ],
-  "next_action": "User runs one of the two one-line deploy commands in docs/STATE.md (gh Pages or vercel), or tells the assistant to allow public repo creation"
+  "next_action": "none - task complete"
 }
