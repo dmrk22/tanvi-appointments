@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.DS_Store
+.env
+# original delivery copies of .claude/ (verified identical)
+files/
+files.zip
+*.zip
+test-results/
+playwright-report/
+screenshots/
+.dbg*.mjs
+.mont.mjs
+.shot.mjs

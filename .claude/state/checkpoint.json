@@ -1,0 +1,38 @@
+{
+  "task": "tanvi-appointment-desk",
+  "phase": "phase-9-blocked-on-permission",
+  "files_touched": [
+    "docs/STATE.md",
+    "tanvi-appointments-dist.zip"
+  ],
+  "commands": [
+    {
+      "cmd": "gh repo create tanvi-appointments --public ... --push",
+      "exit": "denied",
+      "note": "auto-mode classifier: Create Public Surface"
+    },
+    {
+      "cmd": "npm run build",
+      "exit": 0
+    },
+    {
+      "cmd": "gzip -c dist/assets/*.js|.css | wc -c",
+      "exit": 0,
+      "note": "JS 67884B gz, CSS 5719B gz"
+    },
+    {
+      "cmd": "zip -rq tanvi-appointments-dist.zip dist",
+      "exit": 0
+    },
+    {
+      "cmd": "npx vite preview --host --port 4321 (background)",
+      "exit": "running",
+      "note": "Local http://localhost:4321/, Network http://10.4.84.53:4321/"
+    }
+  ],
+  "evidence": [
+    "build/test/budget all verified green before the blocked step",
+    "zip + LAN preview are the working fallback per go.md Phase 9 route 3"
+  ],
+  "next_action": "User runs one of the two one-line deploy commands in docs/STATE.md (gh Pages or vercel), or tells the assistant to allow public repo creation"
+}
