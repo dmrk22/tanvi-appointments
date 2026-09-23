@@ -9,6 +9,7 @@ import { CONFIG } from "../config";
 import { now, toMin, fromMin, time12, weekday, emergencyMinutes } from "../lib/when";
 import { clock } from "../components/clock";
 import { HEART_D } from "../components/pixelArt";
+import { toast } from "../components/toast";
 
 /** a time is fine unless it is today and already gone */
 export function timeOk(date: string, time: string, t = now()) {
@@ -71,6 +72,12 @@ export const timeStep: Step = {
 
     const chips: HTMLButtonElement[] = [];
     function pick(btn: HTMLButtonElement, time: string, e: Event) {
+      // the page may have sat open while this slot went by
+      if (!timeOk(b.date!, time)) {
+        btn.disabled = true;
+        toast("That time just passed. Pick a later one.");
+        return;
+      }
       chips.forEach((x) => x.setAttribute("aria-pressed", "false"));
       btn.setAttribute("aria-pressed", "true");
       store.set({ time });

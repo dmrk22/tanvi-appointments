@@ -21,10 +21,22 @@ export function makeScene(cls: string, build: (el: HTMLElement, ctx: gsap.Contex
  * swap scenes. wipe: circles sweep across. cut: mount directly (boot's explosion is its own
  * transition). over: mount on top and drop the old scene once the new one has covered it.
  */
+let underneath: (() => void) | null = null;
+
+/** "over" scenes call this once they fully cover the old one */
+export function dropPrevious() {
+  underneath?.();
+  underneath = null;
+}
+
 export async function show(make: () => Scene, mode: "wipe" | "cut" | "over" = "wipe") {
+  dropPrevious();
   const prev = current;
   const app = qs("#app");
+  let dropped = false;
   const drop = () => {
+    if (dropped) return;
+    dropped = true;
     prev?.el.remove();
     prev?.ctx.revert();
   };
@@ -38,7 +50,10 @@ export async function show(make: () => Scene, mode: "wipe" | "cut" | "over" = "w
   };
   if (mode === "wipe") await sceneSwap(prev?.el ?? null, mount);
   else mount();
-  if (mode === "over") setTimeout(drop, 900);
+  if (mode === "over") {
+    underneath = drop;
+    setTimeout(drop, 3000); // fallback if the new scene never reports covering it
+  }
   const focusable = current!.el.querySelector<HTMLElement>("[data-autofocus]");
   focusable?.focus({ preventScroll: true });
 }

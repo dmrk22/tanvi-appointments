@@ -1,32 +1,25 @@
 {
   "task": "tanvi-appointment-desk",
-  "phase": "phase-6-done",
+  "phase": "phase-7-done",
   "files_touched": [
-    "src/scenes/{success,history}.ts",
-    "src/lib/{ticketPng,share,ics}.ts",
-    "src/lib/router.ts(over mode)",
-    "src/components/calendar.ts(keyboard flip fix)",
+    "src/steps/time.ts(stale slot guard)",
+    "src/lib/when.ts(test clock seam)",
+    "src/lib/router.ts(dropPrevious)",
+    "src/motion/flowers.ts(desktop side flowers)",
+    "playwright.config.ts(4 projects)",
     "tests/flow.spec.ts"
   ],
   "commands": [
     {
-      "cmd": "npm run build",
-      "exit": 0
-    },
-    {
-      "cmd": "npx playwright test",
+      "cmd": "SHOTS=1 npx playwright test",
       "exit": 0,
-      "note": "6 passed"
-    },
-    {
-      "cmd": "node .dbg3.mjs real-speed success frames",
-      "exit": 0
+      "note": "10 passed across phone/small-phone/desktop/reduced-motion"
     }
   ],
   "evidence": [
-    "PNG 1080x1920 rendered with photo; ics DTSTART 16:30 IST -> 11:00Z",
-    "success timeline frames verified at real speed",
-    "keyboard test failed pre-fix at date-label (Enter during month flip dropped), passes post-fix"
+    "stale-slot test fails with guard disabled, passes with it",
+    "success no longer shows wizard underneath (dropPrevious on flood)",
+    "36 screenshots in screenshots/"
   ],
-  "next_action": "Phase 7 polish: remove playground leftovers/console.log, reduced-motion pass, desktop layout 1440, 360 check, copy; then Phase 8 screenshots + budgets"
+  "next_action": "Phase 8: record bundle sizes, reviewer subagent pass, fix findings; then Phase 9 ship to GitHub Pages"
 }

@@ -112,26 +112,40 @@ const SLOTS: Slot[] = [
 ];
 export const GARDEN_MAX = SLOTS.length;
 
+// wide screens only: taller flowers standing along the sides of the centre column
+const SIDES: Slot[] = [
+  { side: "l", dx: 200, scale: 1.7, petals: 8, ...PINK },
+  { side: "r", dx: 210, scale: 1.55, petals: 6, ...BLUE },
+  { side: "l", dx: 90, scale: 2, petals: 5, ...WHITE },
+  { side: "r", dx: 96, scale: 1.9, petals: 8, ...PINK },
+];
+
 const svg = qs<SVGSVGElement>("#flowers");
 const planted: { el: SVGGElement; slot: Slot }[] = [];
 
+const wide = () => innerWidth > 900;
+
 function place(slot: Slot) {
   // wide screens: spread the garden out along the sides of the centre column
-  const spread = innerWidth > 900 ? 2.4 : 1;
+  const spread = wide() && !SIDES.includes(slot) ? 2.4 : 1;
   const x = slot.side === "l" ? slot.dx * spread : innerWidth - slot.dx * spread;
   return { x, y: innerHeight + 4 };
 }
 
 function plant(i: number, delay = 0) {
-  const slot = SLOTS[i];
-  const el = createFlower({ ...place(slot), ...slot });
-  svg.append(el);
-  planted.push({ el, slot });
-  bloom(el, delay);
+  planted.push(make(SLOTS[i], delay));
 }
 
+function make(slot: Slot, delay: number) {
+  const el = createFlower({ ...place(slot), ...slot });
+  svg.append(el);
+  bloom(el, delay);
+  return { el, slot };
+}
+const sides: { el: SVGGElement; slot: Slot }[] = [];
+
 addEventListener("resize", () => {
-  for (const { el, slot } of planted) {
+  for (const { el, slot } of [...planted, ...sides]) {
     const p = place(slot);
     el.setAttribute("transform", `translate(${p.x} ${p.y}) scale(${slot.scale})`);
   }
@@ -144,6 +158,7 @@ export const garden = {
   /** first six, both corners */
   start() {
     for (let i = planted.length; i < 6; i++) plant(i, (i % 3) * 0.18 + (i >= 3 ? 0.1 : 0));
+    if (wide() && !sides.length) SIDES.forEach((s, i) => sides.push(make(s, 0.3 + i * 0.15)));
   },
   /** one new flower, up to the max */
   grow() {

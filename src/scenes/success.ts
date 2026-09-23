@@ -5,7 +5,7 @@ import { garden } from "../motion/flowers";
 import { sfx } from "../motion/sfx";
 import { haptics } from "../motion/haptics";
 import { h, s } from "../lib/dom";
-import { makeScene, show } from "../lib/router";
+import { makeScene, show, dropPrevious } from "../lib/router";
 import { store } from "../lib/state";
 import { history } from "../lib/storage";
 import { renderTicketPng } from "../lib/ticketPng";
@@ -112,7 +112,10 @@ export function success(origin?: { x: number; y: number }) {
 
       // 0.0 flood white from the confirm button
       tl.fromTo(el, { clipPath: `circle(0px at ${at})` }, { clipPath: `circle(150% at ${at})`, duration: 0.7, ease: "power2.in" }, 0);
-      tl.add(() => el.style.removeProperty("clip-path"), 0.72)
+      tl.add(() => {
+        el.style.removeProperty("clip-path");
+        dropPrevious(); // fully flooded: the wizard underneath can go
+      }, 0.72)
         // then the white clears so the ambient hearts and the garden show through
         .to(el, { backgroundColor: "rgba(255,255,255,0)", duration: 1, ease: "power1.inOut" }, 1.5);
 

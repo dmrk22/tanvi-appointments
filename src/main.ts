@@ -9,6 +9,7 @@ import { startTrail } from "./motion/trail";
 import { sfx } from "./motion/sfx";
 import { h, s, qs } from "./lib/dom";
 import { show } from "./lib/router";
+import { clock } from "./lib/when";
 import { boot } from "./scenes/boot";
 import { hello } from "./scenes/hello";
 
@@ -57,5 +58,10 @@ sound.addEventListener("click", () => {
 });
 qs("#overlay").append(sound);
 
-if (TEST) void show(hello, "cut");
+if (TEST) {
+  (window as unknown as { __setNow: (iso: string) => void }).__setNow = (iso) => {
+    clock.offset = Date.parse(iso) - Date.now();
+  };
+  void show(hello, "cut");
+}
 else void show(() => boot(() => void show(hello, "cut")), "cut");

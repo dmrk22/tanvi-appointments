@@ -19,8 +19,11 @@ function parts(ms: number, tz: string) {
   return { y: +o.year, mo: +o.month, d: +o.day, h: +o.hour, mi: +o.minute };
 }
 
+/** test seam: ?test=1 can shift "now" (gsap runs on the real Date, so the clock can't be frozen) */
+export const clock = { offset: 0 };
+
 /** "now" in the booking timezone: YYYY-MM-DD + minutes since midnight */
-export function now(ms = Date.now(), tz: string = CONFIG.timezone) {
+export function now(ms = Date.now() + clock.offset, tz: string = CONFIG.timezone) {
   const p = parts(ms, tz);
   return { date: `${p.y}-${pad(p.mo)}-${pad(p.d)}`, minutes: p.h * 60 + p.mi };
 }

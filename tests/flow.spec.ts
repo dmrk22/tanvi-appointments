@@ -7,7 +7,7 @@ async function snap(page: Page, name: string) {
   if (!shots) return;
   await page.waitForTimeout(400);
   const vp = page.viewportSize()!;
-  await page.screenshot({ path: `screenshots/${vp.width}x${vp.height}-${name}.png` });
+  await page.screenshot({ path: `screenshots/${test.info().project.name}-${vp.width}x${vp.height}-${name}.png` });
 }
 
 async function book(page: Page, confirm = true) {
@@ -147,4 +147,22 @@ test("keyboard alone can finish the flow", async ({ page }) => {
   await page.getByTestId("confirm").focus();
   await page.keyboard.press("Enter");
   await expect(page.getByRole("heading", { name: "Appointment booked" })).toBeVisible();
+});
+
+test("today: past slots are off, emergency slot works, a slot that goes stale is refused", async ({ page }) => {
+  const setNow = (iso: string) => page.evaluate((t) => (window as unknown as { __setNow(t: string): void }).__setNow(t), iso);
+  await page.goto("/?test=1");
+  await setNow("2026-10-02T10:32:00Z"); // 16:02 IST, Friday 2 October 2026
+  await page.getByTestId("book").click();
+  await page.getByTestId("day-2026-10-02").click();
+  await page.getByTestId("next").click();
+  await expect(page.getByTestId("slot-16:00")).toBeDisabled();
+  await expect(page.getByTestId("slot-16:30")).toBeEnabled();
+  await page.getByTestId("slot-now").click();
+  await expect(page.getByTestId("time-caption")).toHaveText("4:20 PM on Friday. Noted.");
+  // the page sits open until 16:40, then she taps 16:30
+  await setNow("2026-10-02T11:10:00Z");
+  await page.getByTestId("slot-16:30").click();
+  await expect(page.getByTestId("toast")).toHaveText("That time just passed. Pick a later one.");
+  await expect(page.getByTestId("slot-16:30")).toBeDisabled();
 });

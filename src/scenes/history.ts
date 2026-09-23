@@ -36,7 +36,7 @@ export function openHistory() {
           h("span", { class: "mini-where pixel" }, b.place),
           h("span", { class: "mini-id pixel" }, b.id),
         ),
-        h("button", { class: "pill small ghost", type: "button", onclick: () => shareTextOnly(shareText(asBooking(b))) }, "Share"),
+        h("button", { class: "pill small ghost", type: "button", testid: `history-share-${b.id}`, onclick: () => shareTextOnly(shareText(asBooking(b))) }, "Share"),
       ),
     ),
   );
