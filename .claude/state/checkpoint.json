@@ -1,43 +1,38 @@
 {
   "task": "tanvi-appointment-desk",
-  "phase": "phase-8-review-fixed",
+  "phase": "phase-9-blocked-on-permission",
   "files_touched": [
-    "src/steps/{types,list}.ts(new)",
-    "src/scenes/wizard.ts",
-    "src/steps/review.ts",
-    "src/lib/{router,ics,image,ticketPng}.ts",
-    "src/motion/flowers.ts",
-    "playwright.config.ts",
-    "tests/{flow,unit}.spec.ts"
+    "docs/STATE.md",
+    "tanvi-appointments-dist.zip"
   ],
   "commands": [
     {
-      "cmd": "reviewer subagent (live Chromium, dist/ at cd32f87)",
-      "exit": 0,
-      "note": "5 real defects + 1 process gap, evidence-based"
+      "cmd": "gh repo create tanvi-appointments --public ... --push",
+      "exit": "denied",
+      "note": "auto-mode classifier: Create Public Surface"
     },
     {
       "cmd": "npm run build",
       "exit": 0
     },
     {
-      "cmd": "npx playwright test",
+      "cmd": "gzip -c dist/assets/*.js|.css | wc -c",
       "exit": 0,
-      "note": "15 passed, all 4 projects"
+      "note": "JS 67884B gz, CSS 5719B gz"
     },
     {
-      "cmd": "npx playwright test --project=phone --repeat-each=3",
-      "exit": 0,
-      "note": "36 passed"
-    },
-    {
-      "cmd": "each new/changed fix: reverted, confirmed regression test fails, restored, confirmed passes",
+      "cmd": "zip -rq tanvi-appointments-dist.zip dist",
       "exit": 0
+    },
+    {
+      "cmd": "npx vite preview --host --port 4321 (background)",
+      "exit": "running",
+      "note": "Local http://localhost:4321/, Network http://10.4.84.53:4321/"
     }
   ],
   "evidence": [
-    "all 5 required-change findings fixed and independently proven via revert/restore cycle",
-    "budget unchanged: 68.72KB JS gz, 5.74KB CSS gz"
+    "build/test/budget all verified green before the blocked step",
+    "zip + LAN preview are the working fallback per go.md Phase 9 route 3"
   ],
-  "next_action": "Phase 9: ship via gh (public repo tanvi-appointments, GitHub Pages) since gh auth has repo scope; report bundle sizes, test summary, config instructions"
+  "next_action": "User runs one of the two one-line deploy commands in docs/STATE.md (gh Pages or vercel), or tells the assistant to allow public repo creation"
 }

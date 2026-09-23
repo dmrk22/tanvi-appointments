@@ -9,3 +9,4 @@
 - 2026-09-23 — Phase 6 success + outputs done; e2e suite 6/6 green.
 - 2026-09-23 — Phase 7 polish done: reduced-motion/360/1440 verified via screenshots; 10/10 tests.
 - 2026-09-23 — Reviewer subagent found 5 real defects + 1 process gap in a live Chromium check; all fixed with proven regression tests (15/15 suite, 36/36 under repeat-each=3).
+- 2026-09-23 — Phase 9 blocked: auto-mode denies creating a public GitHub repo/deployment from Bash. Build/tests/budget all verified; zip + LAN preview ready; exact one-line deploy commands handed to the user in STATE.md.
