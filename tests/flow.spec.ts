@@ -237,6 +237,41 @@ test("the garden keeps swaying after leaving Hello (its tweens must outlive Hell
   expect(seen.size).toBeGreaterThan(1);
 });
 
+test("Send to him deep-links straight to WhatsApp instead of opening the OS share sheet", async ({ page }) => {
+  // his number is configured in this build (src/config.ts), so "Send to him" must skip
+  // navigator.share (a generic "pick any app" menu) and go straight to his chat
+  await page.addInitScript(() => {
+    const w = window as unknown as { __opened: string[] };
+    w.__opened = [];
+    window.open = ((url: string) => {
+      w.__opened.push(url);
+      return null;
+    }) as typeof window.open;
+    const n = navigator as unknown as { __shareCalled: boolean };
+    n.__shareCalled = false;
+    Object.defineProperty(navigator, "canShare", { value: () => true, configurable: true });
+    Object.defineProperty(navigator, "share", {
+      value: async () => {
+        n.__shareCalled = true;
+      },
+      configurable: true,
+    });
+  });
+  await book(page);
+  await expect(page.getByRole("heading", { name: "Appointment booked" })).toBeVisible();
+  await page.getByTestId("send").click();
+  // poll rather than wait on a "download" event: the pre-fix code never downloads at all on
+  // the share-sheet path, which would otherwise hang this assertion for the full test timeout
+  await expect
+    .poll(() => page.evaluate(() => (window as unknown as { __opened: string[] }).__opened.length), { timeout: 5000 })
+    .toBeGreaterThan(0);
+  const opened = await page.evaluate(() => (window as unknown as { __opened: string[] }).__opened);
+  const shareCalled = await page.evaluate(() => (navigator as unknown as { __shareCalled: boolean }).__shareCalled);
+  expect(shareCalled).toBe(false);
+  expect(opened).toHaveLength(1);
+  expect(opened[0]).toContain("https://wa.me/919346184310?text=");
+});
+
 test("double Enter on Book another only ever mounts one Hello scene", async ({ page }) => {
   await book(page);
   await expect(page.getByRole("heading", { name: "Appointment booked" })).toBeVisible();

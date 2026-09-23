@@ -52,3 +52,14 @@
     risking a stale `dist/` behind a reused preview server.
 - Full suite: 15/15 across phone/small-phone/desktop/reduced-motion, plus phone re-run at `--repeat-each=3`
   (36/36) for flake confidence. Bundle budget unaffected (68.72 KB JS gz, 5.74 KB CSS gz).
+
+## 2026-09-23 — Post-ship UX fix
+
+- **"Send to him" opened the OS share sheet instead of going straight to WhatsApp.** Reported by the
+  user after testing the live site: tapping the button showed the phone's generic "share via…" menu
+  (expected — that's how `navigator.share()` works) rather than opening a WhatsApp chat directly. Since
+  `myWhatsApp` is now configured, `sendPass()`/`shareTextOnly()` in `src/lib/share.ts` now skip the native
+  share sheet entirely and go straight to `download() + wa.me/<number>` whenever a number is set; the
+  share sheet remains the fallback only when no number is configured (nothing specific to deep-link to).
+  Regression test added (fails fast via `expect.poll`, not a blocking `waitForEvent` that would hang for
+  a full minute against the old code path).
