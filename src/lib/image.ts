@@ -9,7 +9,10 @@ function loadImg(src: Blob) {
     const url = URL.createObjectURL(src);
     const img = new Image();
     img.onload = () => ok(img);
-    img.onerror = () => fail(new PhotoError("Couldn't read that photo. Try a JPG or PNG."));
+    img.onerror = () => {
+      URL.revokeObjectURL(url); // the caller never gets this URL back, so it must clean up here
+      fail(new PhotoError("Couldn't read that photo. Try a JPG or PNG."));
+    };
     img.src = url;
   });
 }

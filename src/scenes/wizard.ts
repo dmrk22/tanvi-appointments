@@ -7,36 +7,17 @@ import { sfx } from "../motion/sfx";
 import { haptics } from "../motion/haptics";
 import { h, s, on } from "../lib/dom";
 import { makeScene, show } from "../lib/router";
-import { store, type Booking } from "../lib/state";
+import { store } from "../lib/state";
 import { loveBar } from "../components/loveBar";
 import { toast, announce } from "../components/toast";
 import { pixelSvg, LOCK, HEART, PIX } from "../components/pixelArt";
-import { dateStep } from "../steps/date";
-import { timeStep } from "../steps/time";
-import { placeStep } from "../steps/place";
-import { reasonStep } from "../steps/reason";
-import { paymentStep } from "../steps/payment";
+import { CONTENT_STEPS, firstInvalidStep } from "../steps/list";
 import { reviewStep } from "../steps/review";
+import type { StepApi } from "../steps/types";
 import { hello } from "./hello";
 
-export type StepApi = {
-  /** re-check validity after the booking changed */
-  changed(): void;
-  next(e?: Event): void;
-  goTo(i: number): void;
-};
-export type Step = {
-  key: string;
-  title: string;
-  /** toast when Next is pressed too early */
-  hint: string;
-  valid(b: Booking): boolean;
-  render(api: StepApi): HTMLElement;
-  /** replaces the Next button (review: hold to confirm) */
-  footer?(api: StepApi): HTMLElement;
-};
-
-export const STEPS: Step[] = [dateStep, timeStep, placeStep, reasonStep, paymentStep, reviewStep];
+export type { Step, StepApi } from "../steps/types";
+export const STEPS = [...CONTENT_STEPS, reviewStep];
 export const REVIEW = STEPS.length - 1;
 
 const sleepy = () =>
@@ -92,6 +73,14 @@ export function wizard() {
       if (e) burstFrom(e, next, 12);
       if (editing) {
         editing = false;
+        // the edit itself was valid, but it may have made an *earlier* step stale
+        // (e.g. changing the date can clear an already-picked time) - catch that here too
+        const bad = firstInvalidStep();
+        if (bad >= 0) {
+          toast(CONTENT_STEPS[bad].hint);
+          goTo(bad);
+          return;
+        }
         goTo(REVIEW);
       } else goTo(i + 1);
     }
@@ -117,7 +106,8 @@ export function wizard() {
       announce(`Step ${n + 1} of ${STEPS.length}: ${step.title}`);
       foot.replaceChildren(step.footer ? step.footer(api) : next);
       if (!step.footer) refresh();
-      gsap.delayedCall(0.4, () => title.isConnected && title.focus({ preventScroll: true }));
+      // synchronous, not delayed: a delayedCall here raced a fast keyboard Tab and stole focus back
+      title.focus({ preventScroll: true });
     }
 
     next.addEventListener("click", (e) => advance(e));

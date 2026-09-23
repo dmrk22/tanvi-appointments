@@ -114,6 +114,7 @@ export async function renderTicketPng(b: Booking): Promise<Blob> {
     const s = Math.min(img.width, img.height);
     x.drawImage(img, (img.width - s) / 2, (img.height - s) / 2, s, s, -pw / 2 + inset, -ph / 2 + inset, side, side);
     if ("close" in img) img.close();
+    else URL.revokeObjectURL(img.src); // the <img> fallback path holds an object URL too
   }
   x.fillStyle = C.soft;
   x.font = SOFT(500, 36);

@@ -1,4 +1,5 @@
-import type { Step } from "../scenes/wizard";
+import type { Step } from "./types";
+import { CONTENT_STEPS, firstInvalidStep } from "./list";
 import { gsap } from "../motion/gsap";
 import { sfx } from "../motion/sfx";
 import { store } from "../lib/state";
@@ -39,11 +40,12 @@ export const reviewStep: Step = {
   },
   footer(api) {
     const btn = holdButton("Hold to confirm", () => {
-      // enforced again at the last moment: no photo, no booking
-      const b = store.get();
-      if (!b.photo) {
-        toast("Payment pending: one cute pic.");
-        api.goTo(4);
+      // enforced again at the last moment, for every step, not just the photo:
+      // an edit made from this pass (e.g. a new date) can leave an earlier step stale
+      const bad = firstInvalidStep();
+      if (bad >= 0) {
+        toast(CONTENT_STEPS[bad].hint);
+        api.goTo(bad);
         return;
       }
       const at = centre(btn);

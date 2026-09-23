@@ -123,6 +123,12 @@ const SIDES: Slot[] = [
 const svg = qs<SVGSVGElement>("#flowers");
 const planted: { el: SVGGElement; slot: Slot }[] = [];
 
+// bloom() is called from inside whichever scene is currently entering (hello, or the wizard's
+// goTo()), so gsap.context would file the flower's *infinite* sway tween under that scene and
+// kill it the moment the scene changes. `free.ignore` keeps every flower's tweens outside any
+// scene's context so they keep swaying for the life of the garden, not just the life of a scene.
+const free = gsap.context(() => {});
+
 const wide = () => innerWidth > 900;
 
 function place(slot: Slot) {
@@ -139,7 +145,7 @@ function plant(i: number, delay = 0) {
 function make(slot: Slot, delay: number) {
   const el = createFlower({ ...place(slot), ...slot });
   svg.append(el);
-  bloom(el, delay);
+  free.ignore(() => bloom(el, delay));
   return { el, slot };
 }
 const sides: { el: SVGGElement; slot: Slot }[] = [];

@@ -1,6 +1,8 @@
 import { test, expect } from "@playwright/test";
 import { addDays, longDate, time12, zonedToUtc, now, emergencyMinutes, fromMin } from "../src/lib/when";
 import { ticketId } from "../src/lib/id";
+import { icsFor } from "../src/lib/ics";
+import type { Booking } from "../src/lib/state";
 
 test("date + time helpers", () => {
   expect(addDays("2026-02-27", 2)).toBe("2026-03-01");
@@ -20,4 +22,25 @@ test("date + time helpers", () => {
 
 test("ticket ids use the unambiguous alphabet", () => {
   for (let i = 0; i < 200; i++) expect(ticketId()).toMatch(/^LOVE-[2-9A-HJ-NP-Z]{4}$/);
+});
+
+test("ics escapes semicolons in free text (RFC 5545)", () => {
+  // JS string literal footgun: "\;" is just ";" — the escape must be "\\;" to emit a backslash
+  const b: Booking = {
+    date: "2026-10-02",
+    time: "16:30",
+    place: "NAB",
+    reasons: ["Missing you; a lot"],
+    note: "bring snacks; and hugs",
+    missMeter: 50,
+    photo: null,
+    photoUrl: null,
+    thumb: null,
+    id: "LOVE-ABCD",
+  };
+  const ics = icsFor(b, Date.UTC(2026, 9, 1));
+  // unfold before asserting: DESCRIPTION may be split across folded lines
+  const unfolded = ics.replace(/\r\n /g, "");
+  expect(unfolded).toContain("DESCRIPTION:Missing you\\; a lot — bring snacks\\; and hugs");
+  expect(unfolded).not.toMatch(/[^\\];/); // no bare, unescaped semicolon anywhere in the file
 });

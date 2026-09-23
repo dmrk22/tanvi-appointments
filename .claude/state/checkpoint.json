@@ -1,25 +1,43 @@
 {
   "task": "tanvi-appointment-desk",
-  "phase": "phase-7-done",
+  "phase": "phase-8-review-fixed",
   "files_touched": [
-    "src/steps/time.ts(stale slot guard)",
-    "src/lib/when.ts(test clock seam)",
-    "src/lib/router.ts(dropPrevious)",
-    "src/motion/flowers.ts(desktop side flowers)",
-    "playwright.config.ts(4 projects)",
-    "tests/flow.spec.ts"
+    "src/steps/{types,list}.ts(new)",
+    "src/scenes/wizard.ts",
+    "src/steps/review.ts",
+    "src/lib/{router,ics,image,ticketPng}.ts",
+    "src/motion/flowers.ts",
+    "playwright.config.ts",
+    "tests/{flow,unit}.spec.ts"
   ],
   "commands": [
     {
-      "cmd": "SHOTS=1 npx playwright test",
+      "cmd": "reviewer subagent (live Chromium, dist/ at cd32f87)",
       "exit": 0,
-      "note": "10 passed across phone/small-phone/desktop/reduced-motion"
+      "note": "5 real defects + 1 process gap, evidence-based"
+    },
+    {
+      "cmd": "npm run build",
+      "exit": 0
+    },
+    {
+      "cmd": "npx playwright test",
+      "exit": 0,
+      "note": "15 passed, all 4 projects"
+    },
+    {
+      "cmd": "npx playwright test --project=phone --repeat-each=3",
+      "exit": 0,
+      "note": "36 passed"
+    },
+    {
+      "cmd": "each new/changed fix: reverted, confirmed regression test fails, restored, confirmed passes",
+      "exit": 0
     }
   ],
   "evidence": [
-    "stale-slot test fails with guard disabled, passes with it",
-    "success no longer shows wizard underneath (dropPrevious on flood)",
-    "36 screenshots in screenshots/"
+    "all 5 required-change findings fixed and independently proven via revert/restore cycle",
+    "budget unchanged: 68.72KB JS gz, 5.74KB CSS gz"
   ],
-  "next_action": "Phase 8: record bundle sizes, reviewer subagent pass, fix findings; then Phase 9 ship to GitHub Pages"
+  "next_action": "Phase 9: ship via gh (public repo tanvi-appointments, GitHub Pages) since gh auth has repo scope; report bundle sizes, test summary, config instructions"
 }

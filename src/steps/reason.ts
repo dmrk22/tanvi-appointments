@@ -1,4 +1,4 @@
-import type { Step } from "../scenes/wizard";
+import type { Step } from "./types";
 import { gsap, REDUCED, rand } from "../motion/gsap";
 import { EASE } from "../motion/tokens";
 import { burstFrom } from "../motion/burst";

@@ -1,0 +1,2 @@
+- [Recurring defects](project_recurring_defects.md) — edit-jump revalidation, gsap ctx capture, router race, focus-steal flake, stale dist in npm test
+- [Repro harness](reference_repro_harness.md) — scratch Playwright config + ?test=1 __setNow to prove bugs without editing the repo

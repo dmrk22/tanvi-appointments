@@ -1,4 +1,4 @@
-import type { Step } from "../scenes/wizard";
+import type { Step } from "./types";
 import { store } from "../lib/state";
 import { calendar } from "../components/calendar";
 import { burstFrom } from "../motion/burst";

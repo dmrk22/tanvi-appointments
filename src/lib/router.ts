@@ -29,7 +29,21 @@ export function dropPrevious() {
   underneath = null;
 }
 
+let swapping = false;
+
 export async function show(make: () => Scene, mode: "wipe" | "cut" | "over" = "wipe") {
+  // a second show() while one is still mounting (e.g. two fast Enter presses on the same
+  // button) used to mount two scenes at once and leak the first one's tweens and listeners
+  if (swapping) return;
+  swapping = true;
+  try {
+    await run(make, mode);
+  } finally {
+    swapping = false;
+  }
+}
+
+async function run(make: () => Scene, mode: "wipe" | "cut" | "over") {
   dropPrevious();
   const prev = current;
   const app = qs("#app");

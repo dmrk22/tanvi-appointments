@@ -6,7 +6,8 @@ export default defineConfig({
   testDir: "tests",
   timeout: 60_000,
   use: { baseURL: "http://localhost:4174", browserName: "chromium" },
-  webServer: { command: "npx vite preview --port 4174 --strictPort", url: "http://localhost:4174", reuseExistingServer: true },
+  // always rebuild first: a reused preview server on a stale dist/ has tested the wrong code before
+  webServer: { command: "npm run build && npx vite preview --port 4174 --strictPort", url: "http://localhost:4174", reuseExistingServer: false, timeout: 60_000 },
   projects: [
     { name: "phone", use: { viewport: { width: 390, height: 844 } } },
     { name: "small-phone", grep: e2e, use: { viewport: { width: 360, height: 740 } } },
