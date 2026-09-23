@@ -33,16 +33,17 @@ export const waLink = (text: string) =>
   `https://wa.me/${CONFIG.myWhatsApp.replace(/\D/g, "")}?text=${encodeURIComponent(text)}`;
 
 /**
- * With his number set, skip the OS share sheet and go straight to a WhatsApp chat with him —
- * "Send to him" should send *to him*, not open a menu of every app on the phone. Without a
- * number there's no one specific to deep-link to, so the share sheet (pick anyone) is the
- * fallback; browsers that support neither just get the PNG downloaded.
+ * The OS share sheet is the *only* way the photo itself can travel into WhatsApp already
+ * attached — there is no link or API that pre-attaches a file to a WhatsApp message, so this
+ * has to be tried first whenever the browser supports it, even though it means she picks
+ * WhatsApp from a menu rather than landing there directly. Only browsers with no file-sharing
+ * support at all fall back to a direct link to his number, where she attaches the photo herself.
  * `png` should already be rendered: iOS drops the user gesture across slow awaits.
  */
 export async function sendPass(png: Blob, text: string, name: string): Promise<"shared" | "cancelled" | "fallback"> {
   const file = new File([png], name, { type: "image/png" });
   const data: ShareData = { files: [file], title: "Appointment booked", text };
-  if (!CONFIG.myWhatsApp && navigator.canShare?.(data)) {
+  if (navigator.canShare?.(data)) {
     try {
       await navigator.share(data);
       return "shared";
@@ -51,7 +52,6 @@ export async function sendPass(png: Blob, text: string, name: string): Promise<"
     }
   }
   download(png, name);
-  // no number set -> waLink opens WhatsApp's own contact picker instead of a specific chat
   window.open(waLink(text), "_blank", "noopener");
   return "fallback";
 }

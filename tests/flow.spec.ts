@@ -237,9 +237,11 @@ test("the garden keeps swaying after leaving Hello (its tweens must outlive Hell
   expect(seen.size).toBeGreaterThan(1);
 });
 
-test("Send to him deep-links straight to WhatsApp instead of opening the OS share sheet", async ({ page }) => {
-  // his number is configured in this build (src/config.ts), so "Send to him" must skip
-  // navigator.share (a generic "pick any app" menu) and go straight to his chat
+test("Send to him attaches the photo via the OS share sheet when the browser can share files", async ({ page }) => {
+  // the share sheet is the only path that can carry the photo into WhatsApp already attached,
+  // so it must be tried first whenever the browser supports it, even though it means picking
+  // WhatsApp from a menu rather than landing there directly (there's no link that pre-attaches
+  // a file to a WhatsApp message — this is a WhatsApp/platform limit, not a choice made here)
   await page.addInitScript(() => {
     const w = window as unknown as { __opened: string[] };
     w.__opened = [];
@@ -247,12 +249,12 @@ test("Send to him deep-links straight to WhatsApp instead of opening the OS shar
       w.__opened.push(url);
       return null;
     }) as typeof window.open;
-    const n = navigator as unknown as { __shareCalled: boolean };
-    n.__shareCalled = false;
+    const n = navigator as unknown as { __shared: { files: number; name?: string; type?: string; text?: string }[] };
+    n.__shared = [];
     Object.defineProperty(navigator, "canShare", { value: () => true, configurable: true });
     Object.defineProperty(navigator, "share", {
-      value: async () => {
-        n.__shareCalled = true;
+      value: async (data: ShareData) => {
+        n.__shared.push({ files: data.files?.length ?? 0, name: data.files?.[0]?.name, type: data.files?.[0]?.type, text: data.text });
       },
       configurable: true,
     });
@@ -260,14 +262,30 @@ test("Send to him deep-links straight to WhatsApp instead of opening the OS shar
   await book(page);
   await expect(page.getByRole("heading", { name: "Appointment booked" })).toBeVisible();
   await page.getByTestId("send").click();
-  // poll rather than wait on a "download" event: the pre-fix code never downloads at all on
-  // the share-sheet path, which would otherwise hang this assertion for the full test timeout
-  await expect
-    .poll(() => page.evaluate(() => (window as unknown as { __opened: string[] }).__opened.length), { timeout: 5000 })
-    .toBeGreaterThan(0);
+  await expect(page.getByTestId("toast")).toHaveText("Almost there — pick WhatsApp, then tap send.");
+  const shared = await page.evaluate(() => (navigator as unknown as { __shared: unknown[] }).__shared);
   const opened = await page.evaluate(() => (window as unknown as { __opened: string[] }).__opened);
-  const shareCalled = await page.evaluate(() => (navigator as unknown as { __shareCalled: boolean }).__shareCalled);
-  expect(shareCalled).toBe(false);
+  expect(shared).toEqual([{ files: 1, name: expect.stringMatching(/^tanvi-appointment-LOVE-\w{4}\.png$/), type: "image/png", text: expect.stringContaining("New appointment booked") }]);
+  expect(opened).toEqual([]); // no separate WhatsApp tab: the photo travelled with the share
+});
+
+test("Send to him falls back to a direct WhatsApp link when the browser can't share files", async ({ page }) => {
+  await page.addInitScript(() => {
+    const w = window as unknown as { __opened: string[] };
+    w.__opened = [];
+    window.open = ((url: string) => {
+      w.__opened.push(url);
+      return null;
+    }) as typeof window.open;
+    Object.defineProperty(navigator, "canShare", { value: () => false, configurable: true });
+  });
+  await book(page);
+  await expect(page.getByRole("heading", { name: "Appointment booked" })).toBeVisible();
+  const dl = page.waitForEvent("download");
+  await page.getByTestId("send").click();
+  await dl;
+  await expect(page.getByTestId("toast")).toHaveText("Pass saved. Attach it in WhatsApp, then tap send.");
+  const opened = await page.evaluate(() => (window as unknown as { __opened: string[] }).__opened);
   expect(opened).toHaveLength(1);
   expect(opened[0]).toContain("https://wa.me/919346184310?text=");
 });

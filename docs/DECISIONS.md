@@ -63,3 +63,16 @@
   share sheet remains the fallback only when no number is configured (nothing specific to deep-link to).
   Regression test added (fails fast via `expect.poll`, not a blocking `waitForEvent` that would hang for
   a full minute against the old code path).
+
+## 2026-09-23 — Reverted the previous "skip the share sheet" fix
+
+- The direct-to-WhatsApp fix above traded away the photo attachment: `wa.me` links only ever
+  pre-fill text, never a file — there is no public WhatsApp API/URL scheme that attaches media,
+  so it's a platform limit, not a code choice. The user confirmed they want the photo included,
+  which only the native OS share sheet can do (she picks WhatsApp from the menu, the photo rides
+  along attached, one tap to send). Reverted `sendPass()` in `src/lib/share.ts` to try
+  `navigator.share()` (with the file) first again; the direct `wa.me` link is now only the
+  fallback for browsers that can't share files at all, where she'd need to attach the photo
+  herself anyway. Toast copy updated on both paths to name the one remaining manual step (tap
+  send inside WhatsApp) so this isn't mistaken for a broken auto-send a third time. Two
+  regression tests replace the previous one, covering the share-first path and the true fallback.

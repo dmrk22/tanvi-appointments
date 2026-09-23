@@ -76,8 +76,8 @@ export function success(origin?: { x: number; y: number }) {
     send.addEventListener("click", () =>
       busyWhile(send, async () => {
         const r = await sendPass(await png, shareText(b), passName(b.id!));
-        if (r === "shared") toast("Sent. He's going to love it.");
-        if (r === "fallback") toast("Pass saved. Attach it in WhatsApp.");
+        if (r === "shared") toast("Almost there — pick WhatsApp, then tap send.");
+        if (r === "fallback") toast("Pass saved. Attach it in WhatsApp, then tap send.");
       }),
     );
     const save = h("button", { class: "pill small ghost", type: "button", testid: "save" }, "Save pass");
