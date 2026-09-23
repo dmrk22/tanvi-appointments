@@ -389,3 +389,85 @@
     animation: none !important;
   }
 }
+
+/* ---- polaroid ---- */
+.polaroid {
+  position: relative;
+  margin: 0;
+  width: 220px;
+  padding: 10px 10px 36px;
+  background: var(--milk);
+  border-radius: 4px;
+  box-shadow: 0 14px 30px -12px rgba(58, 42, 77, 0.4), 0 0 0 1px rgba(58, 42, 77, 0.06);
+}
+.polaroid img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 2px;
+  background: var(--cloud);
+}
+.polaroid figcaption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 8px;
+  text-align: center;
+  font-size: var(--fs-s);
+  font-weight: 500;
+  color: var(--ink-soft);
+}
+.tape {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  width: 92px;
+  height: 26px;
+  translate: -50% 0;
+  rotate: -4deg;
+  background: repeating-linear-gradient(45deg, rgba(255, 209, 227, 0.85) 0 6px, rgba(255, 95, 162, 0.45) 6px 9px);
+  opacity: 0.9;
+  z-index: 1;
+}
+.stamp.paid {
+  position: absolute;
+  right: -14px;
+  bottom: 46px;
+  font-size: var(--fs-m);
+  rotate: -12deg;
+  z-index: 2;
+}
+.polaroid.mini {
+  width: 100px;
+  padding: 6px 6px 18px;
+}
+.polaroid.mini .tape {
+  width: 48px;
+  height: 14px;
+  top: -7px;
+}
+.polaroid.mini .stamp.paid {
+  font-size: 11px;
+  padding: 1px 4px;
+  border-width: 2px;
+  right: -10px;
+  bottom: 22px;
+  box-shadow: 2px 2px 0 var(--ink);
+}
+.polaroid.empty {
+  height: 124px;
+  background: var(--cloud);
+}
+
+/* ---- hold to confirm ---- */
+.hold {
+  width: 100%;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+.hold-heart {
+  overflow: visible;
+}
