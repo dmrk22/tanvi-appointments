@@ -1,8 +1,25 @@
 {
   "task": "tanvi-appointment-desk",
-  "phase": "phase-2-done",
-  "files_touched": ["src/lib/{dom,state,storage}.ts", "src/motion/{gsap,tokens,loop,particles,flowers,trail,burst,sfx,haptics,transitions}.ts", "src/components/{loveBar,pixelArt,toast}.ts", "src/styles/{pixel,components}.css", "src/main.ts (playground)"],
-  "commands": [{"cmd": "npm run build", "exit": 0}, {"cmd": "npx playwright install chromium", "exit": 0}, {"cmd": "node shot.mjs (playground screenshot 390x844)", "exit": 0}],
-  "evidence": ["playground screenshot: flowers bloom, lovebar fills, toast renders, no page errors", "js 51KB gz"],
-  "next_action": "Phase 3: scenes/boot.ts + scenes/hello.ts (+runawayButton, easter egg, sound toggle), scenes.css, router in main.ts"
+  "phase": "phase-3-done",
+  "files_touched": [
+    "src/lib/router.ts",
+    "src/scenes/{boot,hello,wizard(stub),history(stub)}.ts",
+    "src/components/runawayButton.ts",
+    "src/styles/scenes.css",
+    "src/main.ts"
+  ],
+  "commands": [
+    {
+      "cmd": "npm run build",
+      "exit": 0
+    },
+    {
+      "cmd": "playwright screenshot boot/hello + runaway x3 + easter egg",
+      "exit": 0
+    }
+  ],
+  "evidence": [
+    "boot->hello handoff renders, Tanvi alternates pink/blue, runaway reached 'nope' after 3 hovers, egg bubble + rain shown, 0 page errors"
+  ],
+  "next_action": "Phase 4: lib/when.ts, components/calendar.ts + clock.ts, steps/date,time,place,reason, scenes/wizard.ts (header, deck, history API, lovebar, garden)"
 }

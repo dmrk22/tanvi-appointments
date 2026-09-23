@@ -212,6 +212,7 @@ export class Engine {
           p.x += p.vx * dt + Math.cos(p.age * 1.3 + p.phase) * 20 * dt;
           p.y += p.vy * dt;
           p.rot += p.vr * dt * 0.4;
+          if (p.kind === "pixel" && p.size > 6) p.size -= dt * 8; // boot pixels settle into confetti
           const fadeIn = Math.min(1, (H - p.y) / (H * 0.15));
           const fadeOut = Math.min(1, p.y / (H * 0.3));
           p.a = Math.max(0, Math.min(fadeIn, fadeOut)) * 0.6;
