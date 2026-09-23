@@ -6,3 +6,4 @@
 - 2026-09-23 — Phase 3 boot + hello done (screenshots checked).
 - 2026-09-23 — Phase 4 wizard steps 1-4 done (walked in Chromium at 390 + 360).
 - 2026-09-23 — Phase 5 payment + review done (upload, stamp, ticket, edit-jump, hold confirm verified in Chromium).
+- 2026-09-23 — Phase 6 success + outputs done; e2e suite 6/6 green.

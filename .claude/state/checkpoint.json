@@ -1,13 +1,12 @@
 {
   "task": "tanvi-appointment-desk",
-  "phase": "phase-5-done",
+  "phase": "phase-6-done",
   "files_touched": [
-    "src/lib/image.ts",
-    "src/components/{polaroid,ticketView,holdButton}.ts",
-    "src/steps/{payment,review}.ts",
-    "src/scenes/success.ts(stub)",
-    "tests/{png.ts,tsconfig.json}",
-    "package.json(typecheck covers tests)"
+    "src/scenes/{success,history}.ts",
+    "src/lib/{ticketPng,share,ics}.ts",
+    "src/lib/router.ts(over mode)",
+    "src/components/calendar.ts(keyboard flip fix)",
+    "tests/flow.spec.ts"
   ],
   "commands": [
     {
@@ -15,12 +14,19 @@
       "exit": 0
     },
     {
-      "cmd": "node .dbg2.mjs 390x844 payment->review->edit->confirm",
+      "cmd": "npx playwright test",
+      "exit": 0,
+      "note": "6 passed"
+    },
+    {
+      "cmd": "node .dbg3.mjs real-speed success frames",
       "exit": 0
     }
   ],
   "evidence": [
-    "upload -> polaroid + PAID stamp; review ticket prints; edit-place -> 'Back to pass' -> step 6/6 with CV BLOCK; confirm -> success stub; 0 page errors"
+    "PNG 1080x1920 rendered with photo; ics DTSTART 16:30 IST -> 11:00Z",
+    "success timeline frames verified at real speed",
+    "keyboard test failed pre-fix at date-label (Enter during month flip dropped), passes post-fix"
   ],
-  "next_action": "Phase 6: scenes/success.ts master timeline, lib/{ticketPng,share,ics}.ts, scenes/history.ts sheet, reset/book another"
+  "next_action": "Phase 7 polish: remove playground leftovers/console.log, reduced-motion pass, desktop layout 1440, 360 check, copy; then Phase 8 screenshots + budgets"
 }

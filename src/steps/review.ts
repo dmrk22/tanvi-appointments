@@ -2,7 +2,7 @@ import type { Step } from "../scenes/wizard";
 import { gsap } from "../motion/gsap";
 import { sfx } from "../motion/sfx";
 import { store } from "../lib/state";
-import { h } from "../lib/dom";
+import { h, centre } from "../lib/dom";
 import { show } from "../lib/router";
 import { ticketId } from "../lib/id";
 import { ticketView } from "../components/ticketView";
@@ -38,7 +38,7 @@ export const reviewStep: Step = {
     return wrap;
   },
   footer(api) {
-    return holdButton("Hold to confirm", () => {
+    const btn = holdButton("Hold to confirm", () => {
       // enforced again at the last moment: no photo, no booking
       const b = store.get();
       if (!b.photo) {
@@ -46,7 +46,9 @@ export const reviewStep: Step = {
         api.goTo(4);
         return;
       }
-      gsap.delayedCall(0.35, () => show(success));
+      const at = centre(btn);
+      gsap.delayedCall(0.35, () => show(() => success(at), "over"));
     });
+    return btn;
   },
 };

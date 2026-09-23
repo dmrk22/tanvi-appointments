@@ -6,3 +6,9 @@ dist/
 files/
 files.zip
 *.zip
+test-results/
+playwright-report/
+screenshots/
+.dbg*.mjs
+.mont.mjs
+.shot.mjs

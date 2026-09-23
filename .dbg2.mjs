@@ -29,7 +29,15 @@ console.log("edit ->", await p.getByTestId("step-count").textContent(), await p.
 await p.getByTestId("place-CV-BLOCK").click();
 await p.getByTestId("next").click(); await p.waitForTimeout(900);
 console.log("back on", await p.getByTestId("step-count").textContent(), (await p.getByTestId("ticket").textContent()).includes("CV BLOCK"));
-await p.getByTestId("confirm").click(); await p.waitForTimeout(1200);
+await p.getByTestId("confirm").click(); await p.waitForTimeout(1500);
 console.log("h1:", await p.locator("h1").first().textContent());
+await p.screenshot({ path: "/private/tmp/claude-501/-Users-damaruk-dev-appointment/6a785ffa-cfe4-4b57-9240-789c46a83d82/scratchpad/" + tag + "-success.png" });
+let d = p.waitForEvent("download"); await p.getByTestId("save").click(); let dl = await d;
+await dl.saveAs("/private/tmp/claude-501/-Users-damaruk-dev-appointment/6a785ffa-cfe4-4b57-9240-789c46a83d82/scratchpad/pass.png"); console.log("png:", dl.suggestedFilename());
+d = p.waitForEvent("download"); await p.getByTestId("calendar").click(); dl = await d;
+await dl.saveAs("/private/tmp/claude-501/-Users-damaruk-dev-appointment/6a785ffa-cfe4-4b57-9240-789c46a83d82/scratchpad/appt.ics"); console.log("ics:", dl.suggestedFilename());
+await p.getByTestId("again").click(); await p.waitForTimeout(900);
+await p.getByTestId("history-count").click(); await p.waitForTimeout(700);
+await p.screenshot({ path: "/private/tmp/claude-501/-Users-damaruk-dev-appointment/6a785ffa-cfe4-4b57-9240-789c46a83d82/scratchpad/" + tag + "-history.png" });
 console.log(errs.join("\n") || "no errors");
 await b.close();

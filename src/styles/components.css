@@ -165,9 +165,11 @@
   padding-bottom: 4px;
 }
 .cal-flip {
+  display: grid;
   perspective: 800px;
 }
 .cal-grid {
+  grid-area: 1 / 1;
   transform-origin: 50% 50%;
 }
 .day {

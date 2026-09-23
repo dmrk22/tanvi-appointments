@@ -72,9 +72,16 @@
 .lovebar.big .rail {
   top: -22px;
 }
+.lovebar.big .row {
+  flex-direction: column-reverse;
+  align-items: stretch;
+  gap: 26px;
+}
 .lovebar.big .pct {
+  position: relative;
+  z-index: 1;
+  text-align: center;
   font-size: var(--fs-l);
-  min-width: 2.6em;
 }
 .lovebar.big .mood {
   text-align: center;
@@ -102,4 +109,10 @@
   border: 3px solid var(--ink);
   box-shadow: var(--pixel-shadow);
   padding: 10px 14px;
+}
+.lovebar .pct.inf {
+  font-family: var(--soft);
+  font-weight: 700;
+  font-size: var(--fs-xl);
+  line-height: 1;
 }

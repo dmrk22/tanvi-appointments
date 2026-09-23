@@ -91,13 +91,14 @@ export function calendar(selected: string | null, onSelect: (iso: string, el: HT
     return h("span", { class: "stamp-heart", "aria-hidden": "true" }, heart(3));
   }
 
-  function show(dir: 0 | 1 | -1, after?: () => void) {
-    flipTl?.progress(1); // finish a running flip first so only one grid is ever mounted
+  function show(dir: 0 | 1 | -1) {
+    flipTl?.progress(1); // finish a running flip first so at most two grids are ever mounted
     const old = grid;
     grid = build();
+    // the new grid is mounted at once (stacked in the same cell) so focus can move into it immediately
+    flip.append(grid);
     const cells = grid.querySelectorAll(".day");
     if (!old) {
-      flip.append(grid);
       gsap.from(cells, {
         scale: 0,
         opacity: 0,
@@ -107,25 +108,19 @@ export function calendar(selected: string | null, onSelect: (iso: string, el: HT
       });
       return;
     }
-    gsap.killTweensOf(old);
-    const incoming = grid;
+    old.inert = true;
     flipTl = gsap
       .timeline()
-      .to(old, { rotationX: 90 * dir, opacity: 0, duration: 0.22, ease: "power2.in" })
-      .add(() => {
-        old.remove();
-        flip.append(incoming);
-        after?.();
-      })
-      .fromTo(incoming, { rotationX: -90 * dir, opacity: 0 }, { rotationX: 0, opacity: 1, duration: 0.4, ease: EASE.pop });
+      .to(old, { rotationX: 90 * dir, opacity: 0, duration: 0.22, ease: "power2.in", onComplete: () => old.remove() })
+      .fromTo(grid, { rotationX: -90 * dir, opacity: 0 }, { rotationX: 0, opacity: 1, duration: 0.4, ease: EASE.pop });
   }
 
-  function month(dir: 1 | -1, after?: () => void) {
+  function month(dir: 1 | -1) {
     vm += dir;
     if (vm < 0) (vm = 11), vy--;
     if (vm > 11) (vm = 0), vy++;
     sfx.pluck(dir > 0 ? 4 : 1);
-    show(dir, after);
+    show(dir);
   }
 
   prev.addEventListener("click", () => !prev.disabled && month(-1));
@@ -193,20 +188,16 @@ export function calendar(selected: string | null, onSelect: (iso: string, el: HT
     e.preventDefault();
     const target = addDays(b.dataset.iso!, delta);
     const [y, m] = target.split("-").map(Number);
-    const focusCell = () => {
-      const cell = grid!.querySelector<HTMLElement>(`[data-iso="${focusIso}"]`);
-      if (!cell) return;
-      roving(cell);
-      cell.focus();
-    };
     if (y * 12 + m - 1 !== vy * 12 + vm) {
       const dir = delta > 0 ? 1 : -1;
       if ((dir > 0 && next.disabled) || (dir < 0 && prev.disabled)) return;
       focusIso = target;
-      month(dir, focusCell); // the new grid is only in the DOM after the flip-out
-    } else {
-      focusIso = target;
-      focusCell();
+      month(dir);
+    } else focusIso = target;
+    const cell = grid!.querySelector<HTMLElement>(`[data-iso="${focusIso}"]`);
+    if (cell) {
+      roving(cell);
+      cell.focus();
     }
   });
 

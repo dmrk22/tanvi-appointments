@@ -80,6 +80,7 @@ export function loveBar(big = false) {
       .to(label, { duration: 0.35, scrambleText: { text: "999%", chars: "0123456789%", speed: 1 } })
       .to(label, { duration: 0.45, scrambleText: { text: "∞", chars: "0123456789%♥", speed: 1 } })
       .add(() => {
+        label.classList.add("inf"); // Silkscreen has no ∞ glyph
         caption.textContent = "love bar: full. overflowing.";
         el.setAttribute("aria-valuetext", "overflowing");
       })

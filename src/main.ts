@@ -57,5 +57,5 @@ sound.addEventListener("click", () => {
 });
 qs("#overlay").append(sound);
 
-if (TEST) void show(hello, false);
-else void show(() => boot(() => void show(hello, false)), false);
+if (TEST) void show(hello, "cut");
+else void show(() => boot(() => void show(hello, "cut")), "cut");
